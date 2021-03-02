@@ -1,0 +1,13 @@
+{
+  "name": "mockify-firefox-ext",
+  "version": "0.1.0",
+  "package-specs": {
+    "module": "es6-global",
+    "in-source": true
+  },
+  "sources": {
+    "dir" : "src",
+    "subdirs" : true,
+    "public": []
+  }
+}

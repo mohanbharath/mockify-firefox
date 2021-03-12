@@ -2,7 +2,12 @@
 
 
 function swap(c, threshold) {
-  if (Math.random() < threshold) {
+  if (c === " ") {
+    return [
+            c,
+            0
+          ];
+  } else if (Math.random() < threshold) {
     return [
             c.toLocaleLowerCase(),
             -1
@@ -25,13 +30,37 @@ function mockify_helper(_done, _remaining, _consecutiveUppers) {
     }
     var threshold = 0.5 + consecutiveUppers * 0.15;
     var match = swap(remaining[0], threshold);
-    var upper = match[1];
-    var nextConsecutive = consecutiveUppers === 0 ? upper : (
-        Math.sign(consecutiveUppers) === upper ? Math.imul(Math.abs(consecutiveUppers) + 1 | 0, upper) : 0
-      );
-    _consecutiveUppers = nextConsecutive;
+    var nextChar = match[0];
+    switch (match[1]) {
+      case -1 :
+          if (consecutiveUppers > 0) {
+            _consecutiveUppers = 0;
+            _remaining = remaining.slice(1);
+            _done = done + nextChar;
+            continue ;
+          }
+          _consecutiveUppers = consecutiveUppers - 1 | 0;
+          _remaining = remaining.slice(1);
+          _done = done + nextChar;
+          continue ;
+      case 0 :
+          break;
+      case 1 :
+          if (consecutiveUppers < 0) {
+            _consecutiveUppers = 0;
+            _remaining = remaining.slice(1);
+            _done = done + nextChar;
+            continue ;
+          }
+          _consecutiveUppers = consecutiveUppers + 1 | 0;
+          _remaining = remaining.slice(1);
+          _done = done + nextChar;
+          continue ;
+      default:
+
+    }
     _remaining = remaining.slice(1);
-    _done = done + match[0];
+    _done = done + nextChar;
     continue ;
   };
 }

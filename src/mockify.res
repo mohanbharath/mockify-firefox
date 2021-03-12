@@ -1,12 +1,10 @@
 let swap = (c: string, threshold: float) =>
 {
-  if Js.Math.random() < threshold
+  switch c
   {
-    (Js.String.toLocaleLowerCase(c), -1)
-  }
-  else
-  {
-    (Js.String.toLocaleUpperCase(c), 1)
+    | " " => (c, 0)
+    | _ when Js.Math.random() < threshold => (Js.String.toLocaleLowerCase(c), -1)
+    | _ => (Js.String.toLocaleUpperCase(c), 1)
   }
 }
 
@@ -19,25 +17,34 @@ let rec mockify_helper = (done, remaining, consecutiveUppers) =>
       {
         let threshold = (0.5 +. Belt.Int.toFloat(consecutiveUppers) *. 0.15)
         let (nextChar, upper) = swap(Js.String.get(remaining, 0), threshold)
-        let nextConsecutive = if (consecutiveUppers == 0) {
-          upper
-        }
-        else
+        switch upper
         {
-          if (Js.Math.sign_int(consecutiveUppers) == upper)
-          {
-            (Js.Math.abs_int(consecutiveUppers) + 1) * upper
-          }
-          else
-          {
-            0
-          }
+          | 1 when consecutiveUppers < 0 => mockify_helper(
+              done ++ nextChar,
+              Js.String.sliceToEnd(~from=1, remaining),
+              0
+            )
+          | 1 => mockify_helper(
+              done ++ nextChar,
+              Js.String.sliceToEnd(~from=1, remaining),
+              consecutiveUppers + 1
+            )
+          | -1 when consecutiveUppers > 0 => mockify_helper(
+              done ++ nextChar,
+              Js.String.sliceToEnd(~from=1, remaining),
+              0
+            )
+          | -1 => mockify_helper(
+              done ++ nextChar,
+              Js.String.sliceToEnd(~from=1, remaining),
+              consecutiveUppers - 1
+            )
+          | _ => mockify_helper(
+              done ++ nextChar,
+              Js.String.sliceToEnd(~from=1, remaining),
+              consecutiveUppers
+            )
         }
-        mockify_helper(
-          done ++ nextChar,
-          Js.String.sliceToEnd(~from=1, remaining),
-          nextConsecutive
-        )
       }
   }
 }

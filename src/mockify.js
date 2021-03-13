@@ -20,13 +20,13 @@ function swap(c, threshold) {
   }
 }
 
-function mockify_helper(_done, _remaining, _consecutiveUppers) {
+function mockify_helper(_completed, _remaining, _consecutiveUppers) {
   while(true) {
     var consecutiveUppers = _consecutiveUppers;
     var remaining = _remaining;
-    var done = _done;
+    var completed = _completed;
     if (remaining === "") {
-      return done;
+      return completed;
     }
     var threshold = 0.5 + consecutiveUppers * 0.17;
     var match = swap(remaining[0], threshold);
@@ -35,20 +35,20 @@ function mockify_helper(_done, _remaining, _consecutiveUppers) {
       case -1 :
           _consecutiveUppers = Math.min(consecutiveUppers - 1 | 0, -1);
           _remaining = remaining.slice(1);
-          _done = done + nextChar;
+          _completed = completed + nextChar;
           continue ;
       case 0 :
           break;
       case 1 :
           _consecutiveUppers = Math.max(consecutiveUppers + 1 | 0, 1);
           _remaining = remaining.slice(1);
-          _done = done + nextChar;
+          _completed = completed + nextChar;
           continue ;
       default:
 
     }
     _remaining = remaining.slice(1);
-    _done = done + nextChar;
+    _completed = completed + nextChar;
     continue ;
   };
 }

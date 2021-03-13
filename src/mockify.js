@@ -28,31 +28,19 @@ function mockify_helper(_done, _remaining, _consecutiveUppers) {
     if (remaining === "") {
       return done;
     }
-    var threshold = 0.5 + consecutiveUppers * 0.15;
+    var threshold = 0.5 + consecutiveUppers * 0.17;
     var match = swap(remaining[0], threshold);
     var nextChar = match[0];
     switch (match[1]) {
       case -1 :
-          if (consecutiveUppers > 0) {
-            _consecutiveUppers = 0;
-            _remaining = remaining.slice(1);
-            _done = done + nextChar;
-            continue ;
-          }
-          _consecutiveUppers = consecutiveUppers - 1 | 0;
+          _consecutiveUppers = Math.min(consecutiveUppers - 1 | 0, -1);
           _remaining = remaining.slice(1);
           _done = done + nextChar;
           continue ;
       case 0 :
           break;
       case 1 :
-          if (consecutiveUppers < 0) {
-            _consecutiveUppers = 0;
-            _remaining = remaining.slice(1);
-            _done = done + nextChar;
-            continue ;
-          }
-          _consecutiveUppers = consecutiveUppers + 1 | 0;
+          _consecutiveUppers = Math.max(consecutiveUppers + 1 | 0, 1);
           _remaining = remaining.slice(1);
           _done = done + nextChar;
           continue ;

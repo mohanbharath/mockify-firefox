@@ -15,29 +15,19 @@ let rec mockify_helper = (done, remaining, consecutiveUppers) =>
     | "" => done
     | _ =>
       {
-        let threshold = (0.5 +. Belt.Int.toFloat(consecutiveUppers) *. 0.15)
+        let threshold = (0.5 +. Belt.Int.toFloat(consecutiveUppers) *. 0.17)
         let (nextChar, upper) = swap(Js.String.get(remaining, 0), threshold)
         switch upper
         {
-          | 1 when consecutiveUppers < 0 => mockify_helper(
-              done ++ nextChar,
-              Js.String.sliceToEnd(~from=1, remaining),
-              0
-            )
           | 1 => mockify_helper(
               done ++ nextChar,
               Js.String.sliceToEnd(~from=1, remaining),
-              consecutiveUppers + 1
-            )
-          | -1 when consecutiveUppers > 0 => mockify_helper(
-              done ++ nextChar,
-              Js.String.sliceToEnd(~from=1, remaining),
-              0
+              Js.Math.max_int(consecutiveUppers + 1, 1)
             )
           | -1 => mockify_helper(
               done ++ nextChar,
               Js.String.sliceToEnd(~from=1, remaining),
-              consecutiveUppers - 1
+              Js.Math.min_int(consecutiveUppers - 1, -1)
             )
           | _ => mockify_helper(
               done ++ nextChar,

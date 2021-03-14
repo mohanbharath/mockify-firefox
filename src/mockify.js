@@ -2,21 +2,34 @@
 
 
 function swap(c, threshold) {
-  if (c === " ") {
-    return [
-            c,
-            0
-          ];
-  } else if (Math.random() < threshold) {
-    return [
-            c.toLocaleLowerCase(),
-            -1
-          ];
-  } else {
-    return [
-            c.toLocaleUpperCase(),
-            1
-          ];
+  switch (c) {
+    case "\n" :
+        return [
+                "\\n",
+                0
+              ];
+    case " " :
+        return [
+                c,
+                0
+              ];
+    case "\"" :
+        return [
+                "\\\"",
+                0
+              ];
+    default:
+      if (Math.random() < threshold) {
+        return [
+                c.toLocaleLowerCase(),
+                -1
+              ];
+      } else {
+        return [
+                c.toLocaleUpperCase(),
+                1
+              ];
+      }
   }
 }
 

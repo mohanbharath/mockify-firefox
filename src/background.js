@@ -42,9 +42,21 @@ browser.menus.onClicked.addListener((info, tab) =>
             frameId: info.frameId,
             code: replaceValueCode,
           });
+          var fallbackCode = `navigator.clipboard.writeText("${mockifiedText}"); alert("Firefox Mockify: Unable to replace text field due to website design; mockified text can be pasted instead");`;
+          fallback = (error) => {
+            console.log(`Exec error: ${error}`)
+            exec_two = browser.tabs.executeScript(tab.id, {
+              frameId: info.frameId,
+              code: fallbackCode,
+            });
+            exec_two.then(
+              (result) => console.log("Fallback successful!"),
+              (error) => console.log(`Fallback exec error: ${error}`)
+            );
+          }
           exec.then(
             (result) => console.log(mockify("Mockification successful!")),
-            (error) => console.log(`Exec error: ${error}`)
+            (error) => fallback(error)
           );
         }
         break

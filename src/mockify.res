@@ -3,6 +3,8 @@ let swap = (c: string, threshold: float) =>
   switch c
   {
     | " " => (c, 0)
+    | "\n" => ("\\n", 0)
+    | "\"" => ("\\\"", 0)
     | _ when Js.Math.random() < threshold => (Js.String.toLocaleLowerCase(c), -1)
     | _ => (Js.String.toLocaleUpperCase(c), 1)
   }

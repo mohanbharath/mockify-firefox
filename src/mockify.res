@@ -12,12 +12,14 @@ let swap = (c: string, threshold: float) =>
 
 let rec mockify_helper = (completed, remaining, consecutiveUppers) =>
 {
+  let base_threshold = 0.5
+  let threshold_mod = 0.17
   switch remaining
   {
     | "" => completed
     | _ =>
       {
-        let threshold = (0.5 +. Belt.Int.toFloat(consecutiveUppers) *. 0.17)
+        let threshold = (base_threshold +. Belt.Int.toFloat(consecutiveUppers) *. threshold_mod)
         let (nextChar, upper) = swap(Js.String.get(remaining, 0), threshold)
         switch upper
         {
